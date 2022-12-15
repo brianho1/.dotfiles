@@ -1,35 +1,55 @@
 " starting vimrc
 " @brianho
 syntax on
+" for plug in to load correctly
+filetype plugin indent on
+set background=dark
 set nocompatible
 set tabstop=4
 set shiftwidth=4
 set expandtab
-set termguicolors 
 set number
 set relativenumber
 set autoindent
 set mouse=a
 
+" make italic comment possible 
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic
+
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin()
   Plug 'preservim/nerdtree'
   Plug 'davidhalter/jedi-vim'    
   Plug 'sheerun/vim-polyglot'
-  Plug 'ghifarit53/tokyonight-vim'
+  Plug 'sonph/onehalf', { 'rtp': 'vim' }
 call plug#end()
 
-" for plug in to load correctly
-filetype plugin indent on
+"color scheme config
+set t_Co=256
+set cursorline
+colorscheme onehalfdark 
+let g:airline_theme='onehalfdark'
 
-colorscheme tokyonight
+"True Colors
+"By default vim only allows specifying one of the 256 (8 bit) predefined colors (wikipedia).
+"If you want to match colors in vim and in your terminal exactly, you must enable true colors (24 bit).
+"In vim/neovim, use set termguicolors option:
 
-let g:tokyonight_style = 'storm' " available: night, storm
-let g:tokyonight_enable_italic = 1
-"let g:tokyonight_transparent_background = 1
 
-" extra config
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
 " remap leader key
-
 nnoremap <SPACE> <Nop>
 let mapleader=" "
 
@@ -70,7 +90,7 @@ vnoremap $e <esc>`>a`<esc>`<i`<esc>
 "map key to nerdtree
 map <leader>nn :NERDTreeToggle<CR>
 "source vim
-map <leader>sv :source ~/.vimrc<CR>
+map <leader>sv :source %<CR>
 
 "managing tabs
 map <leader>tn :tabnew<cr>
@@ -85,8 +105,4 @@ map <leader>cp "*p
 " copy to clipboard in visual mode
 " Note: in MAC and WINDOWS * and + register are no difference.
 vnoremap <leader>cy "*y
-
-
-
-
 
