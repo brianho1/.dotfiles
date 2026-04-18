@@ -81,7 +81,9 @@ install_linux() {
   if ! command -v rg &>/dev/null; then
     echo "==> Installing ripgrep"
     if command -v dnf &>/dev/null; then
-      sudo dnf install -y ripgrep
+      # ripgrep needs EPEL on RHEL/OL
+      sudo dnf install -y epel-release 2>/dev/null || true
+      sudo dnf install -y ripgrep || echo "  Warning: ripgrep not available, Telescope live_grep won't work"
     elif command -v apt-get &>/dev/null; then
       sudo apt-get install -y ripgrep
     fi
