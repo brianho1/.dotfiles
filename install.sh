@@ -36,18 +36,19 @@ install_linux() {
   if command -v nvim &>/dev/null; then
     echo "  nvim already installed: $(nvim --version | head -1)"
   else
-    echo "==> Installing neovim $NVIM_VER ($ARCH)"
+    echo "==> Installing neovim stable ($ARCH)"
+    # Use stable tag — always points to latest stable with correct artifacts
     if [ "$ARCH" = "aarch64" ]; then
-      local URL="https://github.com/neovim/neovim/releases/download/${NVIM_VER}/nvim-linux-arm64.tar.gz"
+      local URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.tar.gz"
       local TAR="nvim-linux-arm64.tar.gz"
       local DIR="nvim-linux-arm64"
     else
-      local URL="https://github.com/neovim/neovim/releases/download/${NVIM_VER}/nvim-linux-x86_64.tar.gz"
+      local URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
       local TAR="nvim-linux-x86_64.tar.gz"
       local DIR="nvim-linux-x86_64"
     fi
 
-    curl -L "$URL" -o "/tmp/$TAR"
+    curl -fsSL "$URL" -o "/tmp/$TAR"
     rm -rf "$NVIM_DIR"
     mkdir -p "$HOME/.local"
     tar -C "$HOME/.local" -xzf "/tmp/$TAR"
